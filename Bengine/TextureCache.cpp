@@ -23,10 +23,8 @@ namespace Bengine {
         if( it== textureMap.end()){
             GLTexture newTexture = ImageLoader::loadPNG(texturePath);
             textureMap[texturePath] = newTexture;
-            std::cout << "Loaded Texture\n";
             return newTexture;
         }
-        std::cout << "Used loaded texture\n";
         return it->second;
     }
 }
