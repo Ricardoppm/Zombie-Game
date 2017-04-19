@@ -25,7 +25,32 @@ namespace Bengine {
         TEXTURE
     };
     
-    struct Glyph{
+    class Glyph{
+    public:
+        Glyph(){}
+        Glyph(const glm::vec4& destRect, const glm::vec4& uvRect, GLuint Texture, float Depth, const ColorRGBA8& Color):
+        texture(Texture), depth(Depth)
+        {
+            // (x,y) == bottom left
+            
+            topLeft.color = Color;
+            topLeft.setPosition(destRect.x, destRect.y + destRect.w);
+            topLeft.setUV(uvRect.x, uvRect.y + uvRect.w);
+            
+            bottomLeft.color = Color;
+            bottomLeft.setPosition(destRect.x, destRect.y);
+            bottomLeft.setUV(uvRect.x, uvRect.y);
+            
+            topRight.color = Color;
+            topRight.setPosition(destRect.x + destRect.z, destRect.y + destRect.w);
+            topRight.setUV(uvRect.x + uvRect.z, uvRect.y + uvRect.w);
+            
+            bottomRight.color = Color;
+            bottomRight.setPosition(destRect.x + destRect.z, destRect.y);
+            bottomRight.setUV(uvRect.x + uvRect.z, uvRect.y);
+        }
+        
+        
         GLuint texture;
         float depth;
         
@@ -68,12 +93,13 @@ namespace Bengine {
         static bool compareFrontToBack(Glyph* a, Glyph* b);
         static bool compareBackToFront(Glyph* a, Glyph* b);
         static bool compareTexture(Glyph* a, Glyph* b);
-
+        
         GLuint _vbo;
         GLuint _vao;
         GlyphSortType _sortType;
         
-        std::vector<Glyph*> _glyphs;
+        std::vector<Glyph*> _glyphPointers; // For sorting
+        std::vector<Glyph> _glyphs; // Contains actual glyphs
         std::vector<RenderBatch> _renderBatches;
     };
 }
