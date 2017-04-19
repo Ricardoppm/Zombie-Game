@@ -26,10 +26,7 @@ void Player::init(float speed, glm::vec2 position, Bengine::InputManager* inputM
 {
     speed_ = speed;
     position_ = position;
-    color_.r = 0;
-    color_.g = 0;
-    color_.b = 190;
-    color_.a = 255;
+    color_ = Bengine::ColorRGBA8(0,0,190,255);
     inputManager_ = inputManager;
     camera_ = camera;
     bullets_ = bullets;
@@ -45,27 +42,27 @@ void Player::addGun(Gun *gun)
     }
 }
 
-void Player::update( const std::vector<std::string>& levelData, std::vector<Human*>& humans, std::vector<Zombie*>& zombie)
+void Player::update( const std::vector<std::string>& levelData, std::vector<Human*>& humans, std::vector<Zombie*>& zombie, float deltaTime)
 {
-    if( inputManager_->isKeyPressed(SDLK_w)){
-        position_.y += speed_;
+    if( inputManager_->isKeyDown(SDLK_w)){
+        position_.y += speed_ * deltaTime;
     }
-    else if( inputManager_->isKeyPressed(SDLK_s)){
-        position_.y -= speed_;
-    }
-    
-    if( inputManager_->isKeyPressed(SDLK_d)){
-        position_.x += speed_; 
-    }
-    else if( inputManager_->isKeyPressed(SDLK_a)){
-        position_.x -= speed_;
+    else if( inputManager_->isKeyDown(SDLK_s)){
+        position_.y -= speed_ * deltaTime;
     }
     
-    if( inputManager_->isKeyPressed(SDLK_1) && guns_.size() >=1){
+    if( inputManager_->isKeyDown(SDLK_d)){
+        position_.x += speed_ * deltaTime;
+    }
+    else if( inputManager_->isKeyDown(SDLK_a)){
+        position_.x -= speed_ * deltaTime;
+    }
+    
+    if( inputManager_->isKeyDown(SDLK_1) && guns_.size() >=1){
         currentGun_ = 0;
-    }else if( inputManager_->isKeyPressed(SDLK_2) && guns_.size() >=2){
+    }else if( inputManager_->isKeyDown(SDLK_2) && guns_.size() >=2){
         currentGun_ = 1;
-    }else if( inputManager_->isKeyPressed(SDLK_3) && guns_.size() >=3){
+    }else if( inputManager_->isKeyDown(SDLK_3) && guns_.size() >=3){
         currentGun_ = 2;
     }
     
@@ -77,10 +74,11 @@ void Player::update( const std::vector<std::string>& levelData, std::vector<Huma
         glm::vec2 direction = glm::normalize(mouseCoords - centerPosition);
 
         
-        guns_[currentGun_]->update(inputManager_->isKeyPressed(SDL_BUTTON_LEFT),
+        guns_[currentGun_]->update(inputManager_->isKeyDown(SDL_BUTTON_LEFT),
                                    centerPosition,
                                    direction,
-                                   *bullets_);
+                                   *bullets_,
+                                   deltaTime);
     }
 
     

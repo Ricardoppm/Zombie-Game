@@ -113,20 +113,22 @@ void MainGame::initShaders()
     _colorProgram.linkShaders();
 }
 
-void MainGame::updateAgents()
+void MainGame::updateAgents(float deltaTime)
 {
     // Update all humans
     for (int i = 0; i < humans_.size(); i++) {
         humans_[i]->update(levels_[currentLevel_]->getLevelData(),
                            humans_,
-                           zombies_);
+                           zombies_,
+                           deltaTime);
     }
     
     // Update all zombies
     for (int i = 0; i < zombies_.size(); i++) {
         zombies_[i]->update(levels_[currentLevel_]->getLevelData(),
                            humans_,
-                           zombies_);
+                           zombies_,
+                            deltaTime);
     }
     
     // Update Collisions
@@ -153,8 +155,6 @@ void MainGame::updateAgents()
         if( zombies_[i]->collideWithAgent(player_)){
             Bengine::fatalError("You Lose!");
         }
-            
-
     }
     
     // Human - Human collisions
@@ -163,12 +163,12 @@ void MainGame::updateAgents()
             humans_[i]->collideWithAgent( humans_[j]);
 }
 
-void MainGame::updateBullets()
+void MainGame::updateBullets(float deltaTime)
 {
     // Update and collide with world
     for (int i = 0; i < bullets_.size();) {
         // if update retuns true, bullet collided with wall -> delete it
-        if(bullets_[i].update(levels_[currentLevel_]->getLevelData())){
+        if(bullets_[i].update(levels_[currentLevel_]->getLevelData(), deltaTime)){
             bullets_[i] = bullets_.back();
             bullets_.pop_back();
         }
@@ -284,26 +284,26 @@ void MainGame::processInput()
         }
     }
     
-    if( _inputManager.isKeyPressed(SDLK_w)){
+    if( _inputManager.isKeyDown(SDLK_w)){
         _camera.setPosition( _camera.getPosition() + glm::vec2(0.0, CAMERA_SPEED) );
     }
-    if( _inputManager.isKeyPressed(SDLK_s)){
+    if( _inputManager.isKeyDown(SDLK_s)){
         _camera.setPosition( _camera.getPosition() + glm::vec2(0.0, -CAMERA_SPEED) );
     }
-    if( _inputManager.isKeyPressed(SDLK_a)){
+    if( _inputManager.isKeyDown(SDLK_a)){
         _camera.setPosition( _camera.getPosition() + glm::vec2(-CAMERA_SPEED, 0.0) );
     }
-    if( _inputManager.isKeyPressed(SDLK_d)){
+    if( _inputManager.isKeyDown(SDLK_d)){
         _camera.setPosition( _camera.getPosition() + glm::vec2(CAMERA_SPEED, 0.0) );
     }
-    if( _inputManager.isKeyPressed(SDLK_q)){
+    if( _inputManager.isKeyDown(SDLK_q)){
         _camera.setScale( _camera.getScale() + CAMERA_SCALESPEED );
     }
-    if( _inputManager.isKeyPressed(SDLK_e)){
+    if( _inputManager.isKeyDown(SDLK_e)){
         _camera.setScale( _camera.getScale() - CAMERA_SCALESPEED );
     }
     
-    if( _inputManager.isKeyPressed(SDL_BUTTON_LEFT)){
+    if( _inputManager.isKeyDown(SDL_BUTTON_LEFT)){
         glm::vec2 mouseCoords = _inputManager.getMouseCoords();
         mouseCoords = _camera.convertScreenToWorld(mouseCoords);
         std::cout << mouseCoords.x << " , " << mouseCoords.y << std::endl;
@@ -320,20 +320,41 @@ void MainGame::processInput()
 
 void MainGame::gameLoop()
 {
+    const int MAX_PHYSICS_STEPS = 5;
+    
+    const int MS_PER_SECOND = 1000;
+    const float DESIRED_FPS = 60;
+    const float DESIRED_FRAMETIME = MS_PER_SECOND / DESIRED_FPS;
+    const float MAX_DELTA_TIME = 1.f;
+    
+    float previousTicks = SDL_GetTicks();
+    
     while (_gameState!= GameState::EXIT) {
-        
         _fpsLimiter.begin();
         
+        float newTicks = SDL_GetTicks();
+        float frameTime = newTicks - previousTicks;
+        previousTicks = newTicks;
+        float totalDeltaTime = frameTime / DESIRED_FRAMETIME;
         checkVictory();
+        
+        _inputManager.update();
         
         processInput();
         
         _camera.setPosition(player_->getPosition());
         _camera.update();
         
-        updateAgents();
-        
-        updateBullets();
+        int i = 0;
+        while( totalDeltaTime > 0.f && i < MAX_PHYSICS_STEPS){
+            float deltaTime = std::min(totalDeltaTime, MAX_DELTA_TIME);
+            
+            updateAgents(deltaTime);
+            updateBullets(deltaTime);
+            
+            totalDeltaTime -= deltaTime;
+            i++;
+        }
         
         drawGame();
 

@@ -22,9 +22,9 @@ Human::~Human()
 {
 }
 
-void Human::update(const std::vector<std::string>& levelData, std::vector<Human*>& humans, std::vector<Zombie*>& zombie)
+void Human::update(const std::vector<std::string>& levelData, std::vector<Human*>& humans, std::vector<Zombie*>& zombie, float deltaTime)
 {
-    position_ += direction_ * speed_;
+    position_ += direction_ * speed_ * deltaTime;
     
     static std::mt19937 randomEngine(time(nullptr));
     static std::uniform_real_distribution<float> randRotate (-0.2f, 0.2f);
@@ -51,10 +51,7 @@ void Human::init(float speed, glm::vec2 pos)
     health_ = 20.f;
     
     // Set up color
-    color_.r = 200;
-    color_.g = 0;
-    color_.b = 200;
-    color_.a = 255;
+    color_ = Bengine::ColorRGBA8(200,0,200,255);
     
     speed_ = speed;
     position_ = pos;

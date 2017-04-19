@@ -29,7 +29,8 @@ public:
     
     void update(const std::vector<std::string>& levelData,
                 std::vector<Human*>& humans,
-                std::vector<Zombie*>& zombie);
+                std::vector<Zombie*>& zombie,
+                float deltaTime) override;
     
     void addGun(Gun* gun);
     

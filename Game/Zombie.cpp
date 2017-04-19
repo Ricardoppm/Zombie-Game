@@ -18,13 +18,13 @@ Zombie::~Zombie()
 {
 }
 
-void Zombie::update(const std::vector<std::string>& levelData, std::vector<Human*>& humans, std::vector<Zombie*>& zombie)
+void Zombie::update(const std::vector<std::string>& levelData, std::vector<Human*>& humans, std::vector<Zombie*>& zombie, float deltaTime)
 {
     Human* closestHuman = getNearestHuman(humans);
     
     if( closestHuman != nullptr){
         glm::vec2 direction = glm::normalize(closestHuman->getPosition() - position_);
-        position_ += direction * speed_;
+        position_ += direction * speed_ * deltaTime;
     }
     
     collideWithLevel(levelData);    
@@ -33,10 +33,7 @@ void Zombie::update(const std::vector<std::string>& levelData, std::vector<Human
 void Zombie::init(float speed, glm::vec2 pos)
 {
     // Set up color
-    color_.r = 0;
-    color_.g = 160;
-    color_.b = 0;
-    color_.a = 255;
+    color_ = Bengine::ColorRGBA8(0,160,0,255);
     
     health_ = 100.f;
     

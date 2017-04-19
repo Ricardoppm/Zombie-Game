@@ -34,11 +34,7 @@ Level::Level(const std::string& filePath)
     spriteBatch_.begin();
     
     glm::vec4 uvRect(0,0,1,1);
-    Bengine::Color color;
-    color.r = 255;
-    color.g = 255;
-    color.b = 255;
-    color.a = 255;
+    Bengine::ColorRGBA8 color(255,255,255,255);
     
     for(int y = 0; y< levelData_.size(); y++){
         for (int x = 0; x < levelData_[y].size(); x++) {

@@ -44,20 +44,28 @@ public:
 private:
     // Initializes the core systems
     void initSystems();
+    
     // Initializes shaders
     void initShaders();
+    
     // Processes input
     void processInput();
+    
     // Main game Loop
     void gameLoop();
+    
     // Draws game
     void drawGame();
+    
     // Initializes the level and sets up actors
     void initLevel();
+    
     // Updates all agents
-    void updateAgents();
+    void updateAgents(float deltaTime);
+    
     // Updates Bullets
-    void updateBullets();
+    void updateBullets(float deltaTime);
+    
     // Verifies win conditions
     void checkVictory();
     

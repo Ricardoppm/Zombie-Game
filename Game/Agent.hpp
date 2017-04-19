@@ -29,7 +29,8 @@ public:
 
     virtual void update(const std::vector<std::string>& levelData,
                         std::vector<Human*>& humans,
-                        std::vector<Zombie*>& zombie) = 0;
+                        std::vector<Zombie*>& zombie,
+                        float deltaTime) = 0;
     
     bool collideWithLevel(const std::vector<std::string>& levelData);
     
@@ -50,7 +51,7 @@ protected:
     
     glm::vec2 position_;
     float speed_;
-    Bengine::Color color_;
+    Bengine::ColorRGBA8 color_;
     float health_;
     
 };
