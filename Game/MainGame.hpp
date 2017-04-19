@@ -26,6 +26,7 @@
 
 #include "Level.hpp"
 #include "Player.hpp"
+#include "Bullet.hpp"
 
 class Zombie;
 
@@ -55,6 +56,10 @@ private:
     void initLevel();
     // Updates all agents
     void updateAgents();
+    // Updates Bullets
+    void updateBullets();
+    // Verifies win conditions
+    void checkVictory();
     
     
     int _screenWidth;
@@ -74,12 +79,18 @@ private:
     
     std::vector<Human*> humans_;
     std::vector<Zombie*> zombies_;
+    std::vector<Bullet> bullets_;
 
     Player* player_;
     
     // FPS 
     float _fps;
     float _maxFPS;
+    
+    // Game Stats
+    int numHumansKilled_;
+    int numZombiesKilled_;
+
 };
 
 #endif /* MainGame_hpp */

@@ -16,7 +16,9 @@
 class Zombie;
 class Human;
 
-const int AGENT_WIDTH = 60;
+const float AGENT_WIDTH = 60.f;
+const float AGENT_RADIUS = AGENT_WIDTH/2.f;
+
 
 
 class Agent
@@ -29,9 +31,14 @@ public:
                         std::vector<Human*>& humans,
                         std::vector<Zombie*>& zombie) = 0;
     
-    void collideWithLevel(const std::vector<std::string>& levelData);
+    bool collideWithLevel(const std::vector<std::string>& levelData);
+    
+    bool collideWithAgent( Agent* agent);
     
     void draw( Bengine::SpriteBatch& spriteBatch);
+    
+    // Return true if agent died
+    bool applyDamage(float damage);
     
     // Getters
     glm::vec2 getPosition() const { return position_; }
@@ -44,6 +51,7 @@ protected:
     glm::vec2 position_;
     float speed_;
     Bengine::Color color_;
+    float health_;
     
 };
 #endif /* Agent_hpp */

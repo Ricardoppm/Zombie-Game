@@ -11,6 +11,7 @@
 
 #include "Agent.hpp"
 
+
 class Zombie : public Agent
 {
 public:
@@ -20,5 +21,10 @@ public:
     virtual void update(const std::vector<std::string>& levelData,
                         std::vector<Human*>& humans,
                         std::vector<Zombie*>& zombie);
+    
+    void init(float speed, glm::vec2 pos);
+    
+private:
+    Human* getNearestHuman(std::vector<Human*>& humans);
 };
 #endif /* Zombie_hpp */

@@ -30,6 +30,9 @@ public:
     glm::vec2 getStartPlayerPos() const { return startPlayerPosition_;}
     const std::vector<glm::vec2>& getStartZombiePos() const { return zombieStartPositions_; }
     const std::vector<std::string>& getLevelData() const { return levelData_; }
+    int getNumHumans() const { return numHumans_; }
+    std::size_t getWidth() const { return levelData_[0].size(); }
+    std::size_t getHeight() const { return levelData_.size(); }
     
 private:
     std::vector<std::string> levelData_;

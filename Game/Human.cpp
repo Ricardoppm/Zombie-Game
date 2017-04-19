@@ -8,7 +8,13 @@
 
 #include "Human.hpp"
 
-Human::Human()
+#include <random>
+#include <ctime>
+
+#include <glm/gtx/rotate_vector.hpp>
+
+Human::Human():
+frames_(0)
 {
 }
 
@@ -18,4 +24,45 @@ Human::~Human()
 
 void Human::update(const std::vector<std::string>& levelData, std::vector<Human*>& humans, std::vector<Zombie*>& zombie)
 {
+    position_ += direction_ * speed_;
+    
+    static std::mt19937 randomEngine(time(nullptr));
+    static std::uniform_real_distribution<float> randRotate (-0.2f, 0.2f);
+    
+    if (frames_ == 20){
+        direction_ = glm::rotate(direction_, randRotate(randomEngine));
+        frames_ = 0;
+    }
+    else
+        frames_++;
+    
+    
+    if(collideWithLevel(levelData))
+        direction_ = glm::rotate(direction_, randRotate(randomEngine));
+        
+}
+
+void Human::init(float speed, glm::vec2 pos)
+{
+    static std::mt19937 randomEngine(time(nullptr));
+    static std::uniform_real_distribution<float> randDir (-1.0f, 1.0f);
+    
+    // Set up human's health
+    health_ = 20.f;
+    
+    // Set up color
+    color_.r = 200;
+    color_.g = 0;
+    color_.b = 200;
+    color_.a = 255;
+    
+    speed_ = speed;
+    position_ = pos;
+    // Get random direction
+    direction_ = glm::vec2( randDir(randomEngine), randDir(randomEngine));
+    // Make sure direction isn't 0
+    if( direction_.length() == 0)
+        direction_ = glm::vec2(1.0f, 0.0f);
+    // Normalize direction
+    direction_ = glm::normalize(direction_);
 }
