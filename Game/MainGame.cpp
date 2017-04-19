@@ -61,6 +61,7 @@ void MainGame::initSystems()
     _fpsLimiter.init(_maxFPS);
     
     _camera.init(_screenWidth, _screenHeight);
+    _camera.setScale(0.25f);
 
 }
 
@@ -296,12 +297,12 @@ void MainGame::processInput()
     if( _inputManager.isKeyDown(SDLK_d)){
         _camera.setPosition( _camera.getPosition() + glm::vec2(CAMERA_SPEED, 0.0) );
     }
-    if( _inputManager.isKeyDown(SDLK_q)){
+    /*if( _inputManager.isKeyDown(SDLK_q)){
         _camera.setScale( _camera.getScale() + CAMERA_SCALESPEED );
     }
     if( _inputManager.isKeyDown(SDLK_e)){
         _camera.setScale( _camera.getScale() - CAMERA_SCALESPEED );
-    }
+    }*/
     
     if( _inputManager.isKeyDown(SDL_BUTTON_LEFT)){
         glm::vec2 mouseCoords = _inputManager.getMouseCoords();
@@ -395,14 +396,22 @@ void MainGame::drawGame()
     
     agentSpriteBatch_.begin();
     
-    // Draw Humans
-    for (int i = 0; i < humans_.size(); i++) {
-        humans_[i]->draw(agentSpriteBatch_);
-    }
+    const glm::vec2 agentDims( AGENT_WIDTH);
     
     // Draw Humans
+    for (int i = 0; i < humans_.size(); i++) {
+        // Check is human is within camera view, if true draw
+        if( _camera.isBoxInView(humans_[i]->getPosition(), agentDims)){
+            humans_[i]->draw(agentSpriteBatch_);
+        }
+    }
+    
+    // Draw zombie
     for (int i = 0; i < zombies_.size(); i++) {
-        zombies_[i]->draw(agentSpriteBatch_);
+        // Check is zombie is within camera view, if true draw
+        if( _camera.isBoxInView(zombies_[i]->getPosition(), agentDims)){
+            zombies_[i]->draw(agentSpriteBatch_);
+        }
     }
     
     // Draw Bullets

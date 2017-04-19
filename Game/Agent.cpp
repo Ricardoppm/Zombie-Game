@@ -146,5 +146,4 @@ void Agent::collideWithTile(glm::vec2 tilePosition)
                 position_.y += yDepth;
         }
     }
-
 }
