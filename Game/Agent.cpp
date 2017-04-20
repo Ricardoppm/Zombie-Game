@@ -13,14 +13,9 @@
 #include "ResourceManager.hpp"
 #include "Level.hpp"
 
-Agent::Agent()
-{
+Agent::Agent() {}
 
-}
-
-Agent::~Agent()
-{
-}
+Agent::~Agent() {}
 
 void Agent::draw( Bengine::SpriteBatch& spriteBatch )
 {

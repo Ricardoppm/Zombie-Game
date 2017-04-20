@@ -40,7 +40,7 @@ private:
     
     std::vector<Bullet>* bullets_;
     std::vector<Gun*> guns_;
-    int currentGun_;
+    int currentGun_ = -1;
 };
 
 #endif /* Player_hpp */

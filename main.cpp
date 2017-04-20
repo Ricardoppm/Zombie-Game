@@ -16,8 +16,6 @@ int main(int argc, const char * argv[]) {
     MainGame mainGame;
     
     mainGame.run();
-    
-    SDL_Delay(3000);
-    
+        
     return 0;
 }

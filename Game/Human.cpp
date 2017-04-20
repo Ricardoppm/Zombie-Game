@@ -13,14 +13,9 @@
 
 #include <glm/gtx/rotate_vector.hpp>
 
-Human::Human():
-frames_(0)
-{
-}
+Human::Human() {}
 
-Human::~Human()
-{
-}
+Human::~Human() {}
 
 void Human::update(const std::vector<std::string>& levelData, std::vector<Human*>& humans, std::vector<Zombie*>& zombie, float deltaTime)
 {

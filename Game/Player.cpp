@@ -12,15 +12,9 @@
 
 #include "Gun.hpp"
 
-Player::Player():
-currentGun_(-1)
-{
-}
+Player::Player() {}
 
-Player::~Player()
-{
-
-}
+Player::~Player() {}
 
 void Player::init(float speed, glm::vec2 position, Bengine::InputManager* inputManager, Bengine::Camera2D* camera,std::vector<Bullet>* bullets)
 {

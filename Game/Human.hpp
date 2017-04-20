@@ -26,6 +26,6 @@ public:
     
 private:
     glm::vec2 direction_;
-    int frames_;
+    int frames_ = 0;
 };
 #endif /* Human_hpp */

@@ -18,13 +18,9 @@
 Bullet::Bullet(float damage, glm::vec2 position, glm::vec2 direction, float speed):
 damage_(damage), position_(position), direction_(direction), speed_(speed)
 {
-    
 }
 
-Bullet::~Bullet()
-{
-
-}
+Bullet::~Bullet() {}
 
 bool Bullet::update(const std::vector<std::string>& levelData, float deltaTime)
 {
