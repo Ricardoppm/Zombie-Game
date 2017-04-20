@@ -22,21 +22,9 @@ const float HUMAN_SPEED = 1.f;
 const float ZOMBIE_SPEED = 1.3f;
 const float PLAYER_SPEED = 5.f;
 
-MainGame::MainGame() :
-    _screenWidth(800),
-    _screenHeight(600),
-    _gameState(GameState::PLAY),
-    _maxFPS(60.f),
-    currentLevel_(0),
-    player_(nullptr)
-{
+MainGame::MainGame() {}
 
-}
-
-MainGame::~MainGame()
-{
-    
-}
+MainGame::~MainGame() {}
 
 void MainGame::run()
 {
@@ -51,7 +39,7 @@ void MainGame::initSystems()
 {
     Bengine::init();
     
-    _window.create("Zombie Game", _screenWidth, _screenHeight, 0);
+    window_.create("Zombie Game", screenWidth_, screenHeight_, 0);
     glClearColor(0.7f, 0.7f, 0.7f, 1.f);
             
     initShaders();
@@ -62,11 +50,11 @@ void MainGame::initSystems()
     // initialize spriteFont
     spriteFont_ = new Bengine::SpriteFont("Game/Fonts/raleway/Raleway-Medium.ttf", 64);
 
-    _fpsLimiter.init(_maxFPS);
+    fpsLimiter_.init(maxFPS_);
     
-    _camera.init(_screenWidth, _screenHeight);
-    hudCamera_.init(_screenWidth, _screenHeight);
-    hudCamera_.setPosition(glm::vec2(_screenWidth/2, _screenHeight/2));
+    camera_.init(screenWidth_, screenHeight_);
+    hudCamera_.init(screenWidth_, screenHeight_);
+    hudCamera_.setPosition(glm::vec2(screenWidth_/2, screenHeight_/2));
 }
 
 void MainGame::initLevel()
@@ -76,7 +64,7 @@ void MainGame::initLevel()
     
     // Init player
     player_ = new Player();
-    player_->init(PLAYER_SPEED, levels_[0]->getStartPlayerPos(), &_inputManager, &_camera, &bullets_);
+    player_->init(PLAYER_SPEED, levels_[0]->getStartPlayerPos(), &inputManager_, &camera_, &bullets_);
     humans_.push_back(player_);
     
     // Give gun to player
@@ -111,11 +99,11 @@ void MainGame::initLevel()
 
 void MainGame::initShaders()
 {
-    _colorProgram.compileShaders("Game/Shaders/textureShading.vert", "Game/Shaders/textureShading.frag");
-    _colorProgram.addAttribute("vertexPosition");
-    _colorProgram.addAttribute("vertexColor");
-    _colorProgram.addAttribute("vertexUV");
-    _colorProgram.linkShaders();
+    colorProgram_.compileShaders("Game/Shaders/textureShading.vert", "Game/Shaders/textureShading.frag");
+    colorProgram_.addAttribute("vertexPosition");
+    colorProgram_.addAttribute("vertexColor");
+    colorProgram_.addAttribute("vertexUV");
+    colorProgram_.linkShaders();
 }
 
 void MainGame::updateAgents(float deltaTime)
@@ -263,53 +251,48 @@ void MainGame::processInput()
     while(SDL_PollEvent(&e)){
         switch (e.type) {
             case SDL_QUIT:
-                _gameState = GameState::EXIT;
+                gameState_ = GameState::EXIT;
                 break;
                 
             case SDL_MOUSEMOTION:
-                _inputManager.setMouseCoords(e.motion.x, e.motion.y);
+                inputManager_.setMouseCoords(e.motion.x, e.motion.y);
                 break;
                 
             case SDL_MOUSEBUTTONDOWN:
-                _inputManager.pressKey(e.button.button);
+                inputManager_.pressKey(e.button.button);
                 break;
                 
             case SDL_MOUSEBUTTONUP:
-                _inputManager.releaseKey(e.button.button);
+                inputManager_.releaseKey(e.button.button);
                 break;
                 
             case SDL_KEYDOWN:
-                _inputManager.pressKey(e.key.keysym.sym);
+                inputManager_.pressKey(e.key.keysym.sym);
                 break;
                 
             case SDL_KEYUP:
-                _inputManager.releaseKey(e.key.keysym.sym);
+                inputManager_.releaseKey(e.key.keysym.sym);
                 break;
         }
     }
     
-    if( _inputManager.isKeyDown(SDLK_w)){
-        _camera.setPosition( _camera.getPosition() + glm::vec2(0.0, CAMERA_SPEED) );
+    if( inputManager_.isKeyDown(SDLK_w)){
+        camera_.setPosition( camera_.getPosition() + glm::vec2(0.0, CAMERA_SPEED) );
     }
-    if( _inputManager.isKeyDown(SDLK_s)){
-        _camera.setPosition( _camera.getPosition() + glm::vec2(0.0, -CAMERA_SPEED) );
+    if( inputManager_.isKeyDown(SDLK_s)){
+        camera_.setPosition( camera_.getPosition() + glm::vec2(0.0, -CAMERA_SPEED) );
     }
-    if( _inputManager.isKeyDown(SDLK_a)){
-        _camera.setPosition( _camera.getPosition() + glm::vec2(-CAMERA_SPEED, 0.0) );
+    if( inputManager_.isKeyDown(SDLK_a)){
+        camera_.setPosition( camera_.getPosition() + glm::vec2(-CAMERA_SPEED, 0.0) );
     }
-    if( _inputManager.isKeyDown(SDLK_d)){
-        _camera.setPosition( _camera.getPosition() + glm::vec2(CAMERA_SPEED, 0.0) );
+    if( inputManager_.isKeyDown(SDLK_d)){
+        camera_.setPosition( camera_.getPosition() + glm::vec2(CAMERA_SPEED, 0.0) );
     }
-    /*if( _inputManager.isKeyDown(SDLK_q)){
-        _camera.setScale( _camera.getScale() + CAMERA_SCALESPEED );
-    }
-    if( _inputManager.isKeyDown(SDLK_e)){
-        _camera.setScale( _camera.getScale() - CAMERA_SCALESPEED );
-    }*/
+
     
-    if( _inputManager.isKeyDown(SDL_BUTTON_LEFT)){
-        glm::vec2 mouseCoords = _inputManager.getMouseCoords();
-        mouseCoords = _camera.convertScreenToWorld(mouseCoords);
+    if( inputManager_.isKeyDown(SDL_BUTTON_LEFT)){
+        glm::vec2 mouseCoords = inputManager_.getMouseCoords();
+        mouseCoords = camera_.convertScreenToWorld(mouseCoords);
         std::cout << mouseCoords.x << " , " << mouseCoords.y << std::endl;
         
         glm::vec2 playerPosition(0.f);
@@ -336,11 +319,11 @@ void MainGame::gameLoop()
     
     // Zoomout the camera by 4x
     const float CAMERA_SCALE = 1.f / 4.f;
-    _camera.setScale(CAMERA_SCALE);
+    camera_.setScale(CAMERA_SCALE);
 
     
-    while (_gameState!= GameState::EXIT) {
-        _fpsLimiter.begin();
+    while (gameState_ != GameState::EXIT) {
+        fpsLimiter_.begin();
         
         float newTicks = SDL_GetTicks();
         float frameTime = newTicks - previousTicks;
@@ -348,12 +331,12 @@ void MainGame::gameLoop()
         float totalDeltaTime = frameTime / DESIRED_FRAMETIME;
         checkVictory();
         
-        _inputManager.update();
+        inputManager_.update();
         
         processInput();
         
-        _camera.setPosition(player_->getPosition());
-        _camera.update();
+        camera_.setPosition(player_->getPosition());
+        camera_.update();
         
         hudCamera_.update();
         
@@ -370,12 +353,12 @@ void MainGame::gameLoop()
         
         drawGame();
 
-        _fps = _fpsLimiter.end();
+        fps_ = fpsLimiter_.end();
         
         static int frameCounter = 0;
         frameCounter++;
-        if( frameCounter == 10000){
-            std::cout << _fps << std::endl;
+        if( frameCounter == 300){
+            std::cout << fps_ << std::endl;
             frameCounter = 0;
         }
     }
@@ -389,17 +372,17 @@ void MainGame::drawGame()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);   // clear screen
     
     // Bind shader that is to be used
-    _colorProgram.use();
+    colorProgram_.use();
     
     // Make sure the shader uses texture 0
     glActiveTexture(GL_TEXTURE0);
-    GLint textureLocation = _colorProgram.getUniformLocation("mySampler");
+    GLint textureLocation = colorProgram_.getUniformLocation("mySampler");
     glUniform1i(textureLocation, 0);
     
 
     // Set uniform variable camera
-    GLint cameraLocation = _colorProgram.getUniformLocation("transformationMatrix");
-    glm::mat4 cameraMatrix = _camera.getCameraMatrix();
+    GLint cameraLocation = colorProgram_.getUniformLocation("transformationMatrix");
+    glm::mat4 cameraMatrix = camera_.getCameraMatrix();
     glUniformMatrix4fv(cameraLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
     
     // Draw level
@@ -412,7 +395,7 @@ void MainGame::drawGame()
     // Draw Humans
     for (int i = 0; i < humans_.size(); i++) {
         // Check is human is within camera view, if true draw
-        if( _camera.isBoxInView(humans_[i]->getPosition(), agentDims)){
+        if( camera_.isBoxInView(humans_[i]->getPosition(), agentDims)){
             humans_[i]->draw(agentSpriteBatch_);
         }
     }
@@ -420,7 +403,7 @@ void MainGame::drawGame()
     // Draw zombie
     for (int i = 0; i < zombies_.size(); i++) {
         // Check is zombie is within camera view, if true draw
-        if( _camera.isBoxInView(zombies_[i]->getPosition(), agentDims)){
+        if( camera_.isBoxInView(zombies_[i]->getPosition(), agentDims)){
             zombies_[i]->draw(agentSpriteBatch_);
         }
     }
@@ -438,9 +421,9 @@ void MainGame::drawGame()
     // Render heads up display
     drawHud();
     
-    _colorProgram.unuse();
+    colorProgram_.unuse();
     
-    _window.swapBuffer();
+    window_.swapBuffer();
 }
 
 void MainGame::drawHud()
@@ -453,7 +436,7 @@ void MainGame::drawHud()
 
 
     // Set uniform variable camera
-    GLint cameraLocation = _colorProgram.getUniformLocation("transformationMatrix");
+    GLint cameraLocation = colorProgram_.getUniformLocation("transformationMatrix");
     glm::mat4 cameraMatrix = hudCamera_.getCameraMatrix();
     glUniformMatrix4fv(cameraLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
     

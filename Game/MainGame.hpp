@@ -74,41 +74,40 @@ private:
     void checkVictory();
     
     
-    int _screenWidth;
-    int _screenHeight;
+    int screenWidth_ = 800;
+    int screenHeight_ = 600;
     
-    GameState _gameState;
+    GameState gameState_ = GameState::PLAY;
         
-    Bengine::Window _window;
-    Bengine::GLSLProgram _colorProgram;
-    Bengine::InputManager _inputManager;
-    Bengine::FpsLimiter _fpsLimiter;
+    Bengine::Window window_;
+    Bengine::GLSLProgram colorProgram_;
+    Bengine::InputManager inputManager_;
+    Bengine::FpsLimiter fpsLimiter_;
     Bengine::SpriteFont* spriteFont_;
     
     Bengine::SpriteBatch agentSpriteBatch_;
     Bengine::SpriteBatch hudSpriteBatch_;
 
-    Bengine::Camera2D _camera; // Main Camera
+    Bengine::Camera2D camera_; // Main Camera
     Bengine::Camera2D hudCamera_; // HUD Camera
 
     
     std::vector<Level*> levels_;
-    int currentLevel_;
+    int currentLevel_ = 0;
     
     std::vector<Human*> humans_;
     std::vector<Zombie*> zombies_;
     std::vector<Bullet> bullets_;
 
-    Player* player_;
+    Player* player_ = nullptr;
     
     // FPS 
-    float _fps;
-    float _maxFPS;
+    float fps_;
+    float maxFPS_ = 60.f;
     
     // Game Stats
     int numHumansKilled_;
     int numZombiesKilled_;
-
 };
 
 #endif /* MainGame_hpp */
