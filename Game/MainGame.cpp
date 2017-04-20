@@ -57,12 +57,16 @@ void MainGame::initSystems()
     initShaders();
     
     agentSpriteBatch_.init();
+    hudSpriteBatch_.init();
+    
+    // initialize spriteFont
+    spriteFont_ = new Bengine::SpriteFont("Game/Fonts/raleway/Raleway-Medium.ttf", 64);
 
     _fpsLimiter.init(_maxFPS);
     
     _camera.init(_screenWidth, _screenHeight);
-    _camera.setScale(0.25f);
-
+    hudCamera_.init(_screenWidth, _screenHeight);
+    hudCamera_.setPosition(glm::vec2(_screenWidth/2, _screenHeight/2));
 }
 
 void MainGame::initLevel()
@@ -253,7 +257,6 @@ void MainGame::checkVictory()
 void MainGame::processInput()
 {
     const float CAMERA_SPEED = 8.f;
-    const float CAMERA_SCALESPEED = 0.2f;
 
     SDL_Event e;
     
@@ -321,14 +324,20 @@ void MainGame::processInput()
 
 void MainGame::gameLoop()
 {
+    // Helpful Constants
     const int MAX_PHYSICS_STEPS = 5;
-    
     const int MS_PER_SECOND = 1000;
     const float DESIRED_FPS = 60;
     const float DESIRED_FRAMETIME = MS_PER_SECOND / DESIRED_FPS;
     const float MAX_DELTA_TIME = 1.f;
     
+    // Used to cap fps
     float previousTicks = SDL_GetTicks();
+    
+    // Zoomout the camera by 4x
+    const float CAMERA_SCALE = 1.f / 4.f;
+    _camera.setScale(CAMERA_SCALE);
+
     
     while (_gameState!= GameState::EXIT) {
         _fpsLimiter.begin();
@@ -345,6 +354,8 @@ void MainGame::gameLoop()
         
         _camera.setPosition(player_->getPosition());
         _camera.update();
+        
+        hudCamera_.update();
         
         int i = 0;
         while( totalDeltaTime > 0.f && i < MAX_PHYSICS_STEPS){
@@ -419,12 +430,52 @@ void MainGame::drawGame()
         bullets_[i].draw(agentSpriteBatch_);
     }
     
+    
+    
     agentSpriteBatch_.end();
     agentSpriteBatch_.renderBatch();
+    
+    // Render heads up display
+    drawHud();
     
     _colorProgram.unuse();
     
     _window.swapBuffer();
+}
+
+void MainGame::drawHud()
+{
+    std::string humanText("Humans Remaining: ");
+    humanText.append(std::to_string(humans_.size()));
+    
+    std::string zombieText("Zombies Remaining: ");
+    zombieText.append(std::to_string(zombies_.size()));
+
+
+    // Set uniform variable camera
+    GLint cameraLocation = _colorProgram.getUniformLocation("transformationMatrix");
+    glm::mat4 cameraMatrix = hudCamera_.getCameraMatrix();
+    glUniformMatrix4fv(cameraLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
+    
+    hudSpriteBatch_.begin();
+    
+    spriteFont_->draw(hudSpriteBatch_,
+                      humanText.c_str(),
+                      glm::vec2(10,10),
+                      glm::vec2(0.5f),
+                      0.0f,
+                      Bengine::ColorRGBA8(255,255,255,255));
+    
+    spriteFont_->draw(hudSpriteBatch_,
+                      zombieText.c_str(),
+                      glm::vec2(10,50),
+                      glm::vec2(0.5f),
+                      0.0f,
+                      Bengine::ColorRGBA8(255,255,255,255));
+    
+    hudSpriteBatch_.end();
+    
+    hudSpriteBatch_.renderBatch();
 }
 
 

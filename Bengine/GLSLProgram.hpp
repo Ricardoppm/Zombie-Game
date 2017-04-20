@@ -34,13 +34,12 @@ namespace Bengine {
     private:
         void compileShader( const std::string filePath, GLuint id);
         
-        int _numAttributes;
+        int numAttributes_ = 0;
 
+        GLuint programID_ = 0;
         
-        GLuint _programID;
-        
-        GLuint _vertexShaderID;
-        GLuint _fragmentShaderID;
+        GLuint vertexShaderID_ = 0;
+        GLuint fragmentShaderID_ = 0;
     };
 }
 #endif /* GLSLProgram_hpp */

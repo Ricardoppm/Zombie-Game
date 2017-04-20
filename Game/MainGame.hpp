@@ -23,6 +23,7 @@
 #include "SpriteBatch.hpp"
 #include "InputManager.hpp"
 #include "Timing.hpp"
+#include "SpriteFont.hpp"
 
 #include "Level.hpp"
 #include "Player.hpp"
@@ -57,6 +58,9 @@ private:
     // Draws game
     void drawGame();
     
+    // Draws the HUD
+    void drawHud();
+    
     // Initializes the level and sets up actors
     void initLevel();
     
@@ -77,10 +81,16 @@ private:
         
     Bengine::Window _window;
     Bengine::GLSLProgram _colorProgram;
-    Bengine::Camera2D _camera;
     Bengine::InputManager _inputManager;
     Bengine::FpsLimiter _fpsLimiter;
+    Bengine::SpriteFont* spriteFont_;
+    
     Bengine::SpriteBatch agentSpriteBatch_;
+    Bengine::SpriteBatch hudSpriteBatch_;
+
+    Bengine::Camera2D _camera; // Main Camera
+    Bengine::Camera2D hudCamera_; // HUD Camera
+
     
     std::vector<Level*> levels_;
     int currentLevel_;

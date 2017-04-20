@@ -27,14 +27,14 @@ namespace Bengine {
         void draw();
         
     private:
-        int _x;
-        int _y;
-        int _width;
-        int _heigth;
+        int x_;
+        int y_;
+        int width_;
+        int heigth_;
 
-        GLuint _vboID;
+        GLuint vboID_ = 0;
         
-        GLTexture _texture;
+        GLTexture texture_;
     };
 }
 #endif /* Sprite_hpp */

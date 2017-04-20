@@ -28,24 +28,24 @@ namespace Bengine {
         bool isBoxInView(const glm::vec2& position, const glm::vec2& dimensions);
         
         // Setters
-        void setPosition(const glm::vec2& newPosition){ _position = newPosition; _needsMatrixUpdate=true; };
-        void setScale(float newScale){ _scale = newScale; _needsMatrixUpdate=true; }
+        void setPosition(const glm::vec2& newPosition){ position_ = newPosition; needsMatrixUpdate_=true; };
+        void setScale(float newScale){ scale_ = newScale; needsMatrixUpdate_=true; }
         
         
         // Getters
-        glm::vec2 getPosition(){ return _position;}
-        float getScale(){ return _scale;}
-        glm::mat4 getCameraMatrix(){ return _cameraMatrix;}
-    
-    private:
-        int _screenWidth;
-        int _screenHeight;
+        glm::vec2 getPosition(){ return position_;}
+        float getScale(){ return scale_;}
+        glm::mat4 getCameraMatrix(){ return cameraMatrix_;}
         
-        bool _needsMatrixUpdate;
-        float _scale;
-        glm::vec2 _position;
-        glm::mat4 _cameraMatrix;
-        glm::mat4 _orthoMatrix;
+    private:
+        int screenWidth_ = 500;
+        int screenHeight_ = 360;
+        
+        bool needsMatrixUpdate_  = true;
+        float scale_ = 1.0f;
+        glm::vec2 position_ = glm::vec2(0,0);
+        glm::mat4 cameraMatrix_ = glm::mat4(1.f);
+        glm::mat4 orthoMatrix_ = glm::mat4(1.f);        
     };
 }
 #endif /* Camera2D_hpp */

@@ -15,30 +15,26 @@
 
 namespace Bengine {
     
-    Sprite::Sprite()
-    : _vboID(0)
-    {
-
-    }
+    Sprite::Sprite() {}
 
     Sprite::~Sprite()
     {
-        if(_vboID){
-            glDeleteBuffers(1, &_vboID);
+        if(vboID_){
+            glDeleteBuffers(1, &vboID_);
         }
     }
 
     void Sprite::init(float x, float y, float width, float height, std::string texturePath)
     {
-        _x = x;
-        _y = y;
-        _width = width;
-        _heigth = height;
+        x_ = x;
+        y_ = y;
+        width_ = width;
+        heigth_ = height;
         
-        _texture = ResourceManager::getTexture(texturePath);
+        texture_ = ResourceManager::getTexture(texturePath);
         
-        if(_vboID==0){
-            glGenBuffers(1, &_vboID);
+        if(vboID_==0){
+            glGenBuffers(1, &vboID_);
         }
         
         Vertex vertexData[6]; // 6 vertexis
@@ -73,7 +69,7 @@ namespace Bengine {
         vertexData[4].setColor(0, 0, 255, 255);
         
         // Tell OpenGL to bind our vertex buffer object
-        glBindBuffer(GL_ARRAY_BUFFER, _vboID);
+        glBindBuffer(GL_ARRAY_BUFFER, vboID_);
         // Upload the data to the GPU
         glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData , GL_STATIC_DRAW);
         // Unbind the buffer (optional)
@@ -83,10 +79,10 @@ namespace Bengine {
     // Draws the sprite to the screen
     void Sprite::draw()
     {
-        glBindTexture(GL_TEXTURE_2D, _texture.id);
+        glBindTexture(GL_TEXTURE_2D, texture_.id);
         
         // bind the buffer object
-        glBindBuffer(GL_ARRAY_BUFFER, _vboID);
+        glBindBuffer(GL_ARRAY_BUFFER, vboID_);
         
         // tell OpenGL that we want to use the first
         // attribute array. We only need one array right now

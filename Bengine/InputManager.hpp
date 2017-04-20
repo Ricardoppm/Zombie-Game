@@ -34,15 +34,15 @@ namespace Bengine {
         bool isKeyPressed(unsigned int keyID) const;
         
         // Getters
-        glm::vec2 getMouseCoords() const { return _mouseCoords; }
+        glm::vec2 getMouseCoords() const { return mouseCoords_; }
         
     private:
         bool wasKeyDown(unsigned int keyID) const;
         
-        std::unordered_map<unsigned int, bool> _keyMap;
-        std::unordered_map<unsigned int, bool> _previousKeyMap;
+        std::unordered_map<unsigned int, bool> keyMap_;
+        std::unordered_map<unsigned int, bool> previousKeyMap_;
 
-        glm::vec2 _mouseCoords;
+        glm::vec2 mouseCoords_ = glm::vec2(0.0f);
         
     };
 }

@@ -10,32 +10,31 @@
 
 namespace Bengine {
     
-    InputManager::InputManager(): _mouseCoords(0.f)
-    {}
+    InputManager::InputManager() {}
     
-    InputManager::~InputManager(){}
+    InputManager::~InputManager() {}
     
     void InputManager::update()
     {
         // Loop through key map and copy iy to previousKeyMap
-        for (auto& it : _keyMap) {
-            _previousKeyMap[it.first] = it.second;
+        for (auto& it : keyMap_) {
+            previousKeyMap_[it.first] = it.second;
         }
     }
     
-    void InputManager::pressKey(unsigned int keyID){ _keyMap[keyID] = true; }
+    void InputManager::pressKey(unsigned int keyID){ keyMap_[keyID] = true; }
     
-    void InputManager::releaseKey(unsigned int keyID){ _keyMap[keyID] = false; }
+    void InputManager::releaseKey(unsigned int keyID){ keyMap_[keyID] = false; }
     
     void InputManager::setMouseCoords(float x, float y){
-        _mouseCoords.x = x;
-        _mouseCoords.y = y;
+        mouseCoords_.x = x;
+        mouseCoords_.y = y;
     }
     
     bool InputManager::isKeyDown(unsigned int keyID) const
     {
-        auto it = _keyMap.find(keyID);
-        if( it != _keyMap.end())
+        auto it = keyMap_.find(keyID);
+        if( it != keyMap_.end())
             return it->second;
         return false;
     }
@@ -49,8 +48,8 @@ namespace Bengine {
     
     bool InputManager::wasKeyDown(unsigned int keyID) const
     {
-        auto it = _previousKeyMap.find(keyID);
-        if( it != _previousKeyMap.end())
+        auto it = previousKeyMap_.find(keyID);
+        if( it != previousKeyMap_.end())
             return it->second;
         return false;
     }

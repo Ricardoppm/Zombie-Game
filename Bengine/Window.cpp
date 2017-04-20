@@ -18,6 +18,9 @@ namespace Bengine {
 
     int Window::create(std::string windowName, int screenWidth, int screenHeight, unsigned int currentFlags)
     {
+        screenWidth_ = screenWidth;
+        screenHeight_ = screenHeight;
+        
         Uint32 flags = SDL_WINDOW_OPENGL;
         
         if( currentFlags & WINDOW_INVISIBLE)
@@ -29,8 +32,8 @@ namespace Bengine {
         
         
         //Create window
-        _sdlWindow = SDL_CreateWindow( windowName.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screenWidth, screenHeight, flags);
-        if( _sdlWindow == NULL )
+        sdlWindow_ = SDL_CreateWindow( windowName.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screenWidth, screenHeight, flags);
+        if( sdlWindow_ == NULL )
         {
             std::string error = "Window could not be created! SDL_Error:";
             error.append(SDL_GetError());
@@ -42,7 +45,7 @@ namespace Bengine {
             SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE );
             
             // Set up OpenGL context
-            SDL_GLContext glContext = SDL_GL_CreateContext(_sdlWindow);
+            SDL_GLContext glContext = SDL_GL_CreateContext(sdlWindow_);
             if( glContext == nullptr){
                 fatalError("SDL context couldn't be created!");
             }
@@ -72,6 +75,6 @@ namespace Bengine {
     void Window::swapBuffer()
     {
         // Swap out buffers and draw on screen
-        SDL_GL_SwapWindow(_sdlWindow);
+        SDL_GL_SwapWindow(sdlWindow_);
     }
 }

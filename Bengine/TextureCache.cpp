@@ -19,10 +19,10 @@ namespace Bengine {
 
     GLTexture TextureCache::getTexture(std::string texturePath)
     {
-        auto it = textureMap.find(texturePath);
-        if( it== textureMap.end()){
+        auto it = textureMap_.find(texturePath);
+        if( it== textureMap_.end()){
             GLTexture newTexture = ImageLoader::loadPNG(texturePath);
-            textureMap[texturePath] = newTexture;
+            textureMap_[texturePath] = newTexture;
             return newTexture;
         }
         return it->second;

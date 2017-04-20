@@ -24,7 +24,7 @@ namespace Bengine {
         GLTexture getTexture(std::string texturePath);
         
     private:
-        std::map<std::string, GLTexture> textureMap;
+        std::map<std::string, GLTexture> textureMap_;
     };
 }
 #endif /* TextureCache_hpp */

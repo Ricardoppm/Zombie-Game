@@ -94,13 +94,13 @@ namespace Bengine {
         static bool compareBackToFront(Glyph* a, Glyph* b);
         static bool compareTexture(Glyph* a, Glyph* b);
         
-        GLuint _vbo;
-        GLuint _vao;
-        GlyphSortType _sortType;
+        GLuint vbo_ = 0;
+        GLuint vao_ = 0;
+        GlyphSortType sortType_;
         
-        std::vector<Glyph*> _glyphPointers; // For sorting
-        std::vector<Glyph> _glyphs; // Contains actual glyphs
-        std::vector<RenderBatch> _renderBatches;
+        std::vector<Glyph*> glyphPointers_; // For sorting
+        std::vector<Glyph> glyphs_; // Contains actual glyphs
+        std::vector<RenderBatch> renderBatches_;
     };
 }
 

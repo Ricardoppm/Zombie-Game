@@ -12,31 +12,32 @@
 
 namespace Bengine {
     
-    FpsLimiter::FpsLimiter(): _maxFPS(60.f){}
+    FpsLimiter::FpsLimiter(){}
     
     void FpsLimiter::init(float maxFPS)
     {
         setTargetFPS(maxFPS);
     }
     
-    void FpsLimiter::setTargetFPS(float maxFPS){ _maxFPS = maxFPS; }
+    void FpsLimiter::setTargetFPS(float maxFPS){ maxFPS_ = maxFPS; }
     
     void FpsLimiter::begin()
     {
-        _startTicks = SDL_GetTicks();
+        startTicks_
+        = SDL_GetTicks();
     }
     
     float FpsLimiter::end()
     {
         calculateFPS();
         
-        float frameTicks = SDL_GetTicks() - _startTicks;
+        float frameTicks = SDL_GetTicks() - startTicks_;
         // Limit FPS to maxFPS
-        if( 1000.0f/_maxFPS > frameTicks){
-            SDL_Delay(1000.0f/_maxFPS - frameTicks);
+        if( 1000.0f/maxFPS_ > frameTicks){
+            SDL_Delay(1000.0f/maxFPS_ - frameTicks);
         }
         
-        return _fps;
+        return fps_;
     }
     
     void FpsLimiter::calculateFPS()
@@ -49,8 +50,8 @@ namespace Bengine {
         float currentTicks;
         currentTicks = SDL_GetTicks();
         
-        _frameTime = currentTicks - previousTicks;
-        frameTimes[ currentFrame % NUM_SAMPLES] = _frameTime;
+        frameTime_ = currentTicks - previousTicks;
+        frameTimes[ currentFrame % NUM_SAMPLES] = frameTime_;
         
         previousTicks = currentTicks;
         
@@ -71,10 +72,10 @@ namespace Bengine {
         frameTimeAverage/=count;
         
         if(frameTimeAverage>0){
-            _fps = 1000.f / frameTimeAverage;
+            fps_ = 1000.f / frameTimeAverage;
         }
         else{
-            _fps = 60.f;
+            fps_ = 60.f;
         }
     }
 }

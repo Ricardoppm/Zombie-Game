@@ -28,11 +28,11 @@ namespace Bengine {
         
         
         // FPS calculation
-        float _fps;
-        float _frameTime;
-        float _maxFPS;
+        float fps_;
+        float frameTime_;
+        float maxFPS_ = 60.f;
 
-        unsigned int _startTicks;
+        unsigned int startTicks_;
     };
 }
 #endif /* Timing_hpp */
