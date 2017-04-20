@@ -11,6 +11,7 @@
 #include <SDL2/SDL.h>
 
 #include "Gun.hpp"
+#include "ResourceManager.hpp"
 
 Player::Player() {}
 
@@ -20,11 +21,12 @@ void Player::init(float speed, glm::vec2 position, Bengine::InputManager* inputM
 {
     speed_ = speed;
     position_ = position;
-    color_ = Bengine::ColorRGBA8(0,0,190,255);
+    color_ = Bengine::ColorRGBA8(255,255,255,255);
     inputManager_ = inputManager;
     camera_ = camera;
     bullets_ = bullets;
     health_ = 100;
+    textureID_ = Bengine::ResourceManager::getTexture("Game/Textures/Player.png").id;
 }
 
 void Player::addGun(Gun *gun)
@@ -60,17 +62,16 @@ void Player::update( const std::vector<std::string>& levelData, std::vector<Huma
         currentGun_ = 2;
     }
     
-    if( currentGun_!=-1){
-        glm::vec2 mouseCoords = camera_->convertScreenToWorld(inputManager_->getMouseCoords());
-        
-        glm::vec2 centerPosition = position_  + glm::vec2(AGENT_RADIUS);
-        
-        glm::vec2 direction = glm::normalize(mouseCoords - centerPosition);
+    glm::vec2 mouseCoords = camera_->convertScreenToWorld(inputManager_->getMouseCoords());
+    
+    glm::vec2 centerPosition = position_  + glm::vec2(AGENT_RADIUS);
+    
+    direction_ = glm::normalize(mouseCoords - centerPosition);
 
-        
+    if( currentGun_!=-1){
         guns_[currentGun_]->update(inputManager_->isKeyDown(SDL_BUTTON_LEFT),
                                    centerPosition,
-                                   direction,
+                                   direction_,
                                    *bullets_,
                                    deltaTime);
     }

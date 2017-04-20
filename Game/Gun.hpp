@@ -14,17 +14,22 @@
 #include <glm/glm.hpp>
 
 #include "Bullet.hpp"
+#include "AudioEngine.hpp"
+
 
 class Gun
 {
 public:
-    Gun(std::string name, int fireRate, int bulletsPerShot, float spread, float bulletSpeed, float bulletDamage);
+    Gun(std::string name, int fireRate, int bulletsPerShot, float spread,
+        float bulletSpeed, float bulletDamage, Bengine::SoundEffect fireEffect);
     ~Gun();
     
     void update(bool isMouseDown , const glm::vec2& position, const glm::vec2& direction, std::vector<Bullet>& bullets, float deltaTime);
     
     
 private:
+    
+    Bengine::SoundEffect fireEffect_;
     
     void fire( const glm::vec2& position, const glm::vec2& direction, std::vector<Bullet>& bullets);
 

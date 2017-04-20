@@ -10,6 +10,76 @@
 
 namespace Bengine {
     
+    // Glyph functions
+    Glyph::Glyph(const glm::vec4& destRect, const glm::vec4& uvRect, GLuint Texture, float Depth, const ColorRGBA8& Color):
+    texture(Texture), depth(Depth)
+    {
+        // (x,y) == bottom left
+        
+        topLeft.color = Color;
+        topLeft.setPosition(destRect.x, destRect.y + destRect.w);
+        topLeft.setUV(uvRect.x, uvRect.y + uvRect.w);
+        
+        bottomLeft.color = Color;
+        bottomLeft.setPosition(destRect.x, destRect.y);
+        bottomLeft.setUV(uvRect.x, uvRect.y);
+        
+        topRight.color = Color;
+        topRight.setPosition(destRect.x + destRect.z, destRect.y + destRect.w);
+        topRight.setUV(uvRect.x + uvRect.z, uvRect.y + uvRect.w);
+        
+        bottomRight.color = Color;
+        bottomRight.setPosition(destRect.x + destRect.z, destRect.y);
+        bottomRight.setUV(uvRect.x + uvRect.z, uvRect.y);
+    }
+    
+    Glyph::Glyph(const glm::vec4& destRect, const glm::vec4& uvRect, GLuint Texture, float Depth, const ColorRGBA8& Color, float angle):
+    texture(Texture), depth(Depth)
+    {
+        // Center sprite on origin
+        glm::vec2 halfDims(destRect.z / 2 , destRect.w / 2);
+        
+        glm::vec2 tl(-halfDims.x, halfDims.y);
+        glm::vec2 bl(-halfDims.x, -halfDims.y);
+        glm::vec2 br(halfDims.x, -halfDims.y);
+        glm::vec2 tr(halfDims.x, halfDims.y);
+
+        // Rotate Points and pass point from center to top left
+        tl = rotatePoint(tl, angle) + halfDims;
+        bl = rotatePoint(bl, angle) + halfDims;
+        br = rotatePoint(br, angle) + halfDims;
+        tr = rotatePoint(tr, angle) + halfDims;
+        
+
+        topLeft.color = Color;
+        topLeft.setPosition(destRect.x + tl.x, destRect.y + tl.y);
+        topLeft.setUV(uvRect.x, uvRect.y + uvRect.w);
+        
+        bottomLeft.color = Color;
+        bottomLeft.setPosition(destRect.x + bl.x, destRect.y + bl.y);
+        bottomLeft.setUV(uvRect.x, uvRect.y);
+        
+        topRight.color = Color;
+        topRight.setPosition(destRect.x + tr.x, destRect.y + tr.y);
+        topRight.setUV(uvRect.x + uvRect.z, uvRect.y + uvRect.w);
+        
+        bottomRight.color = Color;
+        bottomRight.setPosition(destRect.x + br.x, destRect.y + br.y);
+        bottomRight.setUV(uvRect.x + uvRect.z, uvRect.y);
+    }
+
+    glm::vec2 Glyph::rotatePoint(glm::vec2 position, float angle)
+    {
+        glm::vec2 newVector;
+        
+        newVector.x = position.x * cos(angle) - position.y * sin(angle);
+        newVector.y = position.x * sin(angle) + position.y * cos(angle);
+        
+        return newVector;
+    }
+    
+    // SpriteBatch functions
+    
     SpriteBatch::SpriteBatch(){}
     
     SpriteBatch::~SpriteBatch(){}
@@ -39,6 +109,23 @@ namespace Bengine {
     {
         glyphs_.emplace_back(destRect, uvRect, texture, depth, color);
     }
+    
+    void SpriteBatch::draw(const glm::vec4& destRect, const glm::vec4& uvRect, GLuint texture, float depth, const ColorRGBA8& color, float angle)
+    {
+        glyphs_.emplace_back(destRect, uvRect, texture, depth, color, angle);
+    }
+    
+    void SpriteBatch::draw(const glm::vec4& destRect, const glm::vec4& uvRect, GLuint texture, float depth, const ColorRGBA8& color, const glm::vec2& direction )
+    {
+        const glm::vec2 right(1.f,0.f);
+        float angle = acos(glm::dot(direction, right));
+        // angle is always possible [0,180], invert if negative y
+        if( direction.y < 0.f)
+            angle = -angle;
+        
+        glyphs_.emplace_back(destRect, uvRect, texture, depth, color, angle);
+    }
+    
     
     void SpriteBatch::renderBatch()
     {

@@ -25,7 +25,6 @@ public:
     void init(float speed, glm::vec2 pos);
     
 private:
-    glm::vec2 direction_;
     int frames_ = 0;
 };
 #endif /* Human_hpp */

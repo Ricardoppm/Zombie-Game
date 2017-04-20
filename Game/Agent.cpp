@@ -19,8 +19,6 @@ Agent::~Agent() {}
 
 void Agent::draw( Bengine::SpriteBatch& spriteBatch )
 {
-    static int textureID = Bengine::ResourceManager::getTexture("Game/Textures/circle.png").id;
-    
     const glm::vec4 uvRect(0.0f, 0.0f, 1.f, 1.f);
     
     glm::vec4 destRect(position_.x,
@@ -28,7 +26,7 @@ void Agent::draw( Bengine::SpriteBatch& spriteBatch )
                        AGENT_WIDTH,
                        AGENT_WIDTH);
     
-    spriteBatch.draw(destRect, uvRect, textureID, 0, color_);
+    spriteBatch.draw(destRect, uvRect, textureID_, 0, color_, direction_);
 }
 
 bool Agent::applyDamage(float damage)

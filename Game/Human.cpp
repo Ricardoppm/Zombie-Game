@@ -10,8 +10,9 @@
 
 #include <random>
 #include <ctime>
-
 #include <glm/gtx/rotate_vector.hpp>
+
+#include "ResourceManager.hpp"
 
 Human::Human() {}
 
@@ -46,7 +47,9 @@ void Human::init(float speed, glm::vec2 pos)
     health_ = 20.f;
     
     // Set up color
-    color_ = Bengine::ColorRGBA8(200,0,200,255);
+    color_ = Bengine::ColorRGBA8(255,255,255,255);
+    
+    textureID_ = Bengine::ResourceManager::getTexture("Game/Textures/Human.png").id;
     
     speed_ = speed;
     position_ = pos;

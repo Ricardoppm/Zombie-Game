@@ -50,9 +50,11 @@ protected:
     void collideWithTile(glm::vec2 tilePosition);
     
     glm::vec2 position_;
+    glm::vec2 direction_ = glm::vec2(1.f, 0.f);
     float speed_;
     Bengine::ColorRGBA8 color_;
     float health_;
+    GLuint textureID_ = 0;
     
 };
 #endif /* Agent_hpp */

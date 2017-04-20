@@ -24,6 +24,9 @@
 #include "InputManager.hpp"
 #include "Timing.hpp"
 #include "SpriteFont.hpp"
+#include "AudioEngine.hpp"
+#include "ParticleEngine2D.hpp"
+#include "ParticleBatch2D.hpp"
 
 #include "Level.hpp"
 #include "Player.hpp"
@@ -73,6 +76,9 @@ private:
     // Verifies win conditions
     void checkVictory();
     
+    // Add blood particles
+    void addBlood(const glm::vec2& position, int numParticles);
+    
     
     int screenWidth_ = 800;
     int screenHeight_ = 600;
@@ -84,6 +90,7 @@ private:
     Bengine::InputManager inputManager_;
     Bengine::FpsLimiter fpsLimiter_;
     Bengine::SpriteFont* spriteFont_;
+    Bengine::AudioEngine audioEngine_;
     
     Bengine::SpriteBatch agentSpriteBatch_;
     Bengine::SpriteBatch hudSpriteBatch_;
@@ -91,6 +98,8 @@ private:
     Bengine::Camera2D camera_; // Main Camera
     Bengine::Camera2D hudCamera_; // HUD Camera
 
+    Bengine::ParticleEngine2D particleEngine_;
+    Bengine::ParticleBatch2D* bloodParticleBatch_;
     
     std::vector<Level*> levels_;
     int currentLevel_ = 0;
